@@ -1,4 +1,76 @@
 <!DOCTYPE html><html lang="pt-BR"><head>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página do Anúncio</title>
+</head>
+<body>
+
+<h1>Bem-vindo à página de anúncio</h1>
+<p>Por favor, insira a senha para continuar para a página seguinte:</p>
+
+<form id="passwordForm">
+  <label for="password">Senha:</label>
+  <input type="password" id="password" name="password" required>
+  <button type="submit">Continuar</button>
+</form>
+
+<script>
+// Senha correta para passar para a presell
+const senhaCorreta = "123456";  // Substitua pela senha que deseja
+
+// Função para obter parâmetros da URL
+function getURLParameter(name) {
+  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(window.location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+}
+
+// Função para remover um parâmetro específico da URL
+function removeURLParameter(url, parameter) {
+  var urlparts = url.split('?');
+  if (urlparts.length >= 2) {
+    var prefix = encodeURIComponent(parameter) + '=';
+    var pars = urlparts[1].split(/[&;]/g);
+    for (var i = pars.length; i-- > 0;) {
+      if (pars[i].lastIndexOf(prefix, 0) !== -1) {
+        pars.splice(i, 1);
+      }
+    }
+    return urlparts[0] + (pars.length > 0 ? '?' + pars.join('&') : '');
+  }
+  return url;
+}
+
+// Verifica se o parâmetro 'fromAd' está presente na URL
+if (getURLParameter('fromAd') !== 'true') {
+  // Redireciona para uma página de erro ou outra página se o parâmetro não estiver presente
+  window.location.href = "https://seudominio.com/erro";
+}
+
+// Lida com o envio do formulário de senha
+document.getElementById('passwordForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  var senha = document.getElementById('password').value;
+
+  // Verifica se a senha é correta
+  if (senha === senhaCorreta) {
+    // Se a senha estiver correta, redireciona para a presell com o parâmetro 'fromAd=true'
+    window.location.href = "https://seudominio.com/presell?fromAd=true";
+  } else {
+    // Se a senha estiver incorreta, remove o parâmetro 'fromAd' e redireciona para uma página de erro
+    var cleanURL = removeURLParameter(window.location.href, 'fromAd');
+    history.replaceState(null, null, cleanURL);
+    alert('Senha incorreta. Acesso negado.');
+    window.location.href = "https://seudominio.com/erro";  // Página de erro ou redirecionamento alternativo
+  }
+});
+</script>
+
+</body>
+</html>
+
 	
 	<!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
